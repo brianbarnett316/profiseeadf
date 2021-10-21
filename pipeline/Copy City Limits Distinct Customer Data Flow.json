@@ -1,0 +1,61 @@
+{
+	"name": "Copy City Limits Distinct Customer Data Flow",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy City Limits Distinct Sales Customers",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "CopyCityLimitsCustomerDataFlow",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"SalesData": {
+								"FolderName": {
+									"value": "@pipeline().parameters.FolderName",
+									"type": "Expression"
+								},
+								"FileName": {
+									"value": "@pipeline().parameters.FileName",
+									"type": "Expression"
+								}
+							},
+							"OutputDistinctCustomers": {
+								"ContainerName": "sales-upload-to-profisee",
+								"FolderName": "city-limits"
+							}
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "IntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"parameters": {
+			"FolderName": {
+				"type": "string"
+			},
+			"FileName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "City Limits"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-10-20T17:02:38Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

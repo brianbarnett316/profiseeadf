@@ -1,0 +1,9 @@
+{
+	"name": "ProfiseeADF",
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "c3f4420c-5430-4edd-a091-7752a19901e8",
+		"tenantId": "f1044a57-45a0-47bd-9316-a223924fec4e"
+	}
+}
