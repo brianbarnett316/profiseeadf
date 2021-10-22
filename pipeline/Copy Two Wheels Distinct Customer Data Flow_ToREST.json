@@ -28,6 +28,9 @@
 									"value": "@pipeline().parameters.FileName",
 									"type": "Expression"
 								}
+							},
+							"OutputDistinctCustomers": {
+								"entityId": "Customer"
 							}
 						}
 					},
