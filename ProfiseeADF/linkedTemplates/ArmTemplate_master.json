@@ -79,6 +79,10 @@
 			"type": "string",
 			"defaultValue": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
 		},
+		"Profisee REST API No Auth Header_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -118,6 +122,9 @@
 					"ProfiseeKeyVault_properties_typeProperties_baseUrl": {
 						"value": "[parameters('ProfiseeKeyVault_properties_typeProperties_baseUrl')]"
 					},
+					"Profisee REST API No Auth Header_properties_typeProperties_url": {
+						"value": "[parameters('Profisee REST API No Auth Header_properties_typeProperties_url')]"
+					},
 					"Profisee REST API_properties_typeProperties_url": {
 						"value": "[parameters('Profisee REST API_properties_typeProperties_url')]"
 					},
@@ -132,6 +139,24 @@
 					},
 					"NewCityLimitsSalesCsv_properties_typeProperties_scope": {
 						"value": "[parameters('NewCityLimitsSalesCsv_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "ProfiseeADF_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FolderName": {
 						"value": "[parameters('NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FolderName')]"
@@ -159,24 +184,6 @@
 					},
 					"NewTwoWheelsSalesCsv_properties_typeProperties_scope": {
 						"value": "[parameters('NewTwoWheelsSalesCsv_properties_typeProperties_scope')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "ProfiseeADF_ArmTemplate_1",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
 					}
 				}
 			},

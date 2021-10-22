@@ -59,6 +59,9 @@
 		"NewTwoWheelsSalesCsv_properties_typeProperties_scope": {
 			"value": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
 		},
+		"Profisee REST API No Auth Header_properties_typeProperties_url": {
+			"value": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
+		},
 		"containerUri": {
 			"value": ""
 		},

@@ -78,6 +78,10 @@
 		"NewTwoWheelsSalesCsv_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
+		},
+		"Profisee REST API No Auth Header_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
 		}
 	},
 	"variables": {
@@ -1112,7 +1116,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Profisee_REST_API_Records_Upsert",
+								"referenceName": "Profisee_REST_API_Records_Upsert_copy1",
 								"type": "DatasetReference"
 							},
 							"name": "OutputDistinctCustomers"
@@ -1134,7 +1138,50 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DataLakeCsv')]",
-				"[concat(variables('factoryId'), '/datasets/Profisee_REST_API_Records_Upsert')]"
+				"[concat(variables('factoryId'), '/datasets/Profisee_REST_API_Records_Upsert_copy1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Profisee REST API No Auth Header')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('Profisee REST API No Auth Header_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Profisee_REST_API_Records_Upsert_copy1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Profisee REST API No Auth Header",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"entityId": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": {
+						"value": "@concat(\n'records/',\ndataset().entityId, \n'/?isUpsert=true'\n)\n",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Profisee REST API No Auth Header')]"
 			]
 		}
 	]

@@ -6,6 +6,42 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "ProfiseeADF"
+		},
+		"NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FolderName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FolderPath"
+		},
+		"NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FileName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FileName"
+		},
+		"NewSalesUploadCityLimitsCsv_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
+		},
+		"NewSalesUploadTwoWheelsCsv_properties_Copy Two Wheels Customers to Profisee_parameters_FolderName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FolderPath"
+		},
+		"NewSalesUploadTwoWheelsCsv_properties_Copy Two Wheels Customers to Profisee_parameters_FileName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FileName"
+		},
+		"NewSalesUploadTwoWheelsCsv_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
+		},
+		"NewTwoWheelsSalesCsv_properties_Copy Two Wheels Distinct Customer Data Flow_parameters_FolderName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FolderPath"
+		},
+		"NewTwoWheelsSalesCsv_properties_Copy Two Wheels Distinct Customer Data Flow_parameters_FileName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FileName"
+		},
+		"NewTwoWheelsSalesCsv_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
 		}
 	},
 	"variables": {
@@ -13,70 +49,98 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy Two Wheels Distinct Customer Data Flow_ToREST')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/NewSalesUploadCityLimitsCsv')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
 					{
-						"name": "Copy Two Wheels Distinct Sales Customers",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
+						"pipelineReference": {
+							"referenceName": "Copy City Limits Customers to Profisee",
+							"type": "PipelineReference"
 						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "CopyTwoWheelsCustomerDataFlow_ToREST",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"SalesData": {
-										"FolderName": {
-											"value": "@pipeline().parameters.FolderName",
-											"type": "Expression"
-										},
-										"FileName": {
-											"value": "@pipeline().parameters.FileName",
-											"type": "Expression"
-										}
-									},
-									"OutputDistinctCustomers": {
-										"entityId": "Customer"
-									}
-								}
-							},
-							"staging": {},
-							"integrationRuntime": {
-								"referenceName": "IntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"traceLevel": "Fine"
+						"parameters": {
+							"FolderName": "[parameters('NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FolderName')]",
+							"FileName": "[parameters('NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FileName')]"
 						}
 					}
 				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"FolderName": {
-						"type": "string"
-					},
-					"FileName": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Two Wheels"
-				},
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/sales-upload-to-profisee/blobs/city-limits",
+					"blobPathEndsWith": ".csv",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('NewSalesUploadCityLimitsCsv_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/NewSalesUploadTwoWheelsCsv')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
 				"annotations": [],
-				"lastPublishTime": "2021-10-20T17:02:38Z"
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Two Wheels Customers to Profisee",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"FolderName": "[parameters('NewSalesUploadTwoWheelsCsv_properties_Copy Two Wheels Customers to Profisee_parameters_FolderName')]",
+							"FileName": "[parameters('NewSalesUploadTwoWheelsCsv_properties_Copy Two Wheels Customers to Profisee_parameters_FileName')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/sales-upload-to-profisee/blobs/two-wheels",
+					"blobPathEndsWith": ".csv",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('NewSalesUploadTwoWheelsCsv_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/NewTwoWheelsSalesCsv')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Two Wheels Distinct Customer Data Flow",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"FolderName": "[parameters('NewTwoWheelsSalesCsv_properties_Copy Two Wheels Distinct Customer Data Flow_parameters_FolderName')]",
+							"FileName": "[parameters('NewTwoWheelsSalesCsv_properties_Copy Two Wheels Distinct Customer Data Flow_parameters_FileName')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/two-wheels/blobs/",
+					"blobPathEndsWith": ".csv",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('NewTwoWheelsSalesCsv_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
 			},
 			"dependsOn": []
 		}
