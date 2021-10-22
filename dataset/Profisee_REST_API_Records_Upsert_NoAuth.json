@@ -1,5 +1,5 @@
 {
-	"name": "Profisee_REST_API_Records_Upsert_copy1",
+	"name": "Profisee_REST_API_Records_Upsert_NoAuth",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Profisee REST API No Auth Header",
