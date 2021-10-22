@@ -1,0 +1,153 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ProfiseeADF"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/NewTwoWheelsSalesCsv')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Two Wheels Distinct Customer Data Flow",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"FolderName": "@triggerBody().FolderPath",
+							"FileName": "@triggerBody().FileName"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/two-wheels/blobs/",
+					"blobPathEndsWith": ".csv",
+					"ignoreEmptyBlobs": true,
+					"scope": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy Two Wheels Distinct Customer Data Flow_ToREST')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Two Wheels Distinct Sales Customers",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "CopyTwoWheelsCustomerDataFlow_ToREST",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"SalesData": {
+										"FolderName": {
+											"value": "@pipeline().parameters.FolderName",
+											"type": "Expression"
+										},
+										"FileName": {
+											"value": "@pipeline().parameters.FileName",
+											"type": "Expression"
+										}
+									},
+									"OutputDistinctCustomers": {
+										"entityId": "Customer"
+									}
+								}
+							},
+							"integrationRuntime": {
+								"referenceName": "IntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"parameters": {
+					"FolderName": {
+						"type": "string"
+					},
+					"FileName": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Two Wheels"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-10-20T17:02:38Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/CopyTwoWheelsCustomerDataFlow_ToREST')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyTwoWheelsCustomerDataFlow_ToREST')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DataLakeCsv",
+								"type": "DatasetReference"
+							},
+							"name": "SalesData"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Profisee_REST_API_Records_Upsert",
+								"type": "DatasetReference"
+							},
+							"name": "OutputDistinctCustomers"
+						}
+					],
+					"transformations": [
+						{
+							"name": "DistinctRows"
+						},
+						{
+							"name": "SelectCustomerColumns"
+						},
+						{
+							"name": "DerivedColumn1"
+						}
+					],
+					"script": "source(output(\n\t\t{Transaction ID} as integer,\n\t\tCustomer as string,\n\t\tName as string,\n\t\tZip as string,\n\t\tProduct as string,\n\t\tMSRP as double,\n\t\tQuantity as short,\n\t\tTotal as double,\n\t\tDate as date 'MM/dd/yyyy'\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SalesData\nSalesData aggregate(groupBy(Customer),\n\teach(match(name!='Customer'), $$ = first($$))) ~> DistinctRows\nDistinctRows select(mapColumn(\n\t\tCustomer,\n\t\tName,\n\t\tZip\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectCustomerColumns\nSelectCustomerColumns derive({Source System} = 'Two Wheels') ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tinsertHttpMethod: 'PATCH',\n\ttimeout: 30,\n\theaders: ['x-api-key' -> '7cd70af83611405ea394c80d16535499'],\n\ttruncate: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tTwoWheelsID = Customer,\n\t\tName,\n\t\tZip,\n\t\t{Source System}\n\t),\n\tpartitionBy('roundRobin', 4),\n\tpreCommands: [],\n\tpostCommands: []) ~> OutputDistinctCustomers"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

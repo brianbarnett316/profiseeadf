@@ -1,0 +1,188 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ProfiseeADF"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"ProfiseeDataLakeStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ProfiseeDataLakeStorage'"
+		},
+		"Profisee REST API_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
+		},
+		"ProfiseeDataLakeStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://profiseedatalake.dfs.core.windows.net"
+		},
+		"ProfiseeKeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://ProfiseeKV.vault.azure.net/"
+		},
+		"ProfiseeRESTAPI_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
+		},
+		"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FolderPath"
+		},
+		"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FileName"
+		},
+		"NewCityLimitsSalesCsv_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
+		},
+		"NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FolderName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FolderPath"
+		},
+		"NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FileName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FileName"
+		},
+		"NewSalesUploadCityLimitsCsv_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
+		},
+		"NewSalesUploadTwoWheelsCsv_properties_Copy Two Wheels Customers to Profisee_parameters_FolderName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FolderPath"
+		},
+		"NewSalesUploadTwoWheelsCsv_properties_Copy Two Wheels Customers to Profisee_parameters_FileName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FileName"
+		},
+		"NewSalesUploadTwoWheelsCsv_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
+		},
+		"NewTwoWheelsSalesCsv_properties_Copy Two Wheels Distinct Customer Data Flow_parameters_FolderName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FolderPath"
+		},
+		"NewTwoWheelsSalesCsv_properties_Copy Two Wheels Distinct Customer Data Flow_parameters_FileName": {
+			"type": "string",
+			"defaultValue": "@triggerBody().FileName"
+		},
+		"NewTwoWheelsSalesCsv_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ProfiseeADF_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureBlobStorage1_connectionString": {
+						"value": "[parameters('AzureBlobStorage1_connectionString')]"
+					},
+					"ProfiseeDataLakeStorage_accountKey": {
+						"value": "[parameters('ProfiseeDataLakeStorage_accountKey')]"
+					},
+					"ProfiseeDataLakeStorage_properties_typeProperties_url": {
+						"value": "[parameters('ProfiseeDataLakeStorage_properties_typeProperties_url')]"
+					},
+					"ProfiseeKeyVault_properties_typeProperties_baseUrl": {
+						"value": "[parameters('ProfiseeKeyVault_properties_typeProperties_baseUrl')]"
+					},
+					"Profisee REST API_properties_typeProperties_url": {
+						"value": "[parameters('Profisee REST API_properties_typeProperties_url')]"
+					},
+					"ProfiseeRESTAPI_properties_typeProperties_url": {
+						"value": "[parameters('ProfiseeRESTAPI_properties_typeProperties_url')]"
+					},
+					"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName": {
+						"value": "[parameters('NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName')]"
+					},
+					"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName": {
+						"value": "[parameters('NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName')]"
+					},
+					"NewCityLimitsSalesCsv_properties_typeProperties_scope": {
+						"value": "[parameters('NewCityLimitsSalesCsv_properties_typeProperties_scope')]"
+					},
+					"NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FolderName": {
+						"value": "[parameters('NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FolderName')]"
+					},
+					"NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FileName": {
+						"value": "[parameters('NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FileName')]"
+					},
+					"NewSalesUploadCityLimitsCsv_properties_typeProperties_scope": {
+						"value": "[parameters('NewSalesUploadCityLimitsCsv_properties_typeProperties_scope')]"
+					},
+					"NewSalesUploadTwoWheelsCsv_properties_Copy Two Wheels Customers to Profisee_parameters_FolderName": {
+						"value": "[parameters('NewSalesUploadTwoWheelsCsv_properties_Copy Two Wheels Customers to Profisee_parameters_FolderName')]"
+					},
+					"NewSalesUploadTwoWheelsCsv_properties_Copy Two Wheels Customers to Profisee_parameters_FileName": {
+						"value": "[parameters('NewSalesUploadTwoWheelsCsv_properties_Copy Two Wheels Customers to Profisee_parameters_FileName')]"
+					},
+					"NewSalesUploadTwoWheelsCsv_properties_typeProperties_scope": {
+						"value": "[parameters('NewSalesUploadTwoWheelsCsv_properties_typeProperties_scope')]"
+					},
+					"NewTwoWheelsSalesCsv_properties_Copy Two Wheels Distinct Customer Data Flow_parameters_FolderName": {
+						"value": "[parameters('NewTwoWheelsSalesCsv_properties_Copy Two Wheels Distinct Customer Data Flow_parameters_FolderName')]"
+					},
+					"NewTwoWheelsSalesCsv_properties_Copy Two Wheels Distinct Customer Data Flow_parameters_FileName": {
+						"value": "[parameters('NewTwoWheelsSalesCsv_properties_Copy Two Wheels Distinct Customer Data Flow_parameters_FileName')]"
+					},
+					"NewTwoWheelsSalesCsv_properties_typeProperties_scope": {
+						"value": "[parameters('NewTwoWheelsSalesCsv_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "ProfiseeADF_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ProfiseeADF_ArmTemplate_0')]"
+			]
+		}
+	]
+}

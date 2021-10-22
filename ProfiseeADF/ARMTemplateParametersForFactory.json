@@ -1,0 +1,63 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ProfiseeADF"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"ProfiseeDataLakeStorage_accountKey": {
+			"value": ""
+		},
+		"Profisee REST API_properties_typeProperties_url": {
+			"value": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
+		},
+		"ProfiseeDataLakeStorage_properties_typeProperties_url": {
+			"value": "https://profiseedatalake.dfs.core.windows.net"
+		},
+		"ProfiseeKeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://ProfiseeKV.vault.azure.net/"
+		},
+		"ProfiseeRESTAPI_properties_typeProperties_url": {
+			"value": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
+		},
+		"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName": {
+			"value": "@triggerBody().FolderPath"
+		},
+		"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName": {
+			"value": "@triggerBody().FileName"
+		},
+		"NewCityLimitsSalesCsv_properties_typeProperties_scope": {
+			"value": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
+		},
+		"NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FolderName": {
+			"value": "@triggerBody().FolderPath"
+		},
+		"NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FileName": {
+			"value": "@triggerBody().FileName"
+		},
+		"NewSalesUploadCityLimitsCsv_properties_typeProperties_scope": {
+			"value": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
+		},
+		"NewSalesUploadTwoWheelsCsv_properties_Copy Two Wheels Customers to Profisee_parameters_FolderName": {
+			"value": "@triggerBody().FolderPath"
+		},
+		"NewSalesUploadTwoWheelsCsv_properties_Copy Two Wheels Customers to Profisee_parameters_FileName": {
+			"value": "@triggerBody().FileName"
+		},
+		"NewSalesUploadTwoWheelsCsv_properties_typeProperties_scope": {
+			"value": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
+		},
+		"NewTwoWheelsSalesCsv_properties_Copy Two Wheels Distinct Customer Data Flow_parameters_FolderName": {
+			"value": "@triggerBody().FolderPath"
+		},
+		"NewTwoWheelsSalesCsv_properties_Copy Two Wheels Distinct Customer Data Flow_parameters_FileName": {
+			"value": "@triggerBody().FileName"
+		},
+		"NewTwoWheelsSalesCsv_properties_typeProperties_scope": {
+			"value": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
+		}
+	}
+}
