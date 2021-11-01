@@ -15,6 +15,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ProfiseeDataLakeStorage'"
 		},
+		"Salesforce1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Salesforce1'"
+		},
+		"Salesforce1_securityToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'securityToken' of 'Salesforce1'"
+		},
 		"Profisee REST API No Auth Header_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
@@ -34,6 +42,14 @@
 		"ProfiseeRESTAPI_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
+		},
+		"Salesforce1_properties_typeProperties_environmentUrl": {
+			"type": "string",
+			"defaultValue": "https://login.salesforce.com"
+		},
+		"Salesforce1_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "tye3950@yahoo.com"
 		},
 		"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName": {
 			"type": "string",
@@ -116,6 +132,12 @@
 					"ProfiseeDataLakeStorage_accountKey": {
 						"value": "[parameters('ProfiseeDataLakeStorage_accountKey')]"
 					},
+					"Salesforce1_password": {
+						"value": "[parameters('Salesforce1_password')]"
+					},
+					"Salesforce1_securityToken": {
+						"value": "[parameters('Salesforce1_securityToken')]"
+					},
 					"Profisee REST API No Auth Header_properties_typeProperties_url": {
 						"value": "[parameters('Profisee REST API No Auth Header_properties_typeProperties_url')]"
 					},
@@ -125,20 +147,17 @@
 					"ProfiseeKeyVault_properties_typeProperties_baseUrl": {
 						"value": "[parameters('ProfiseeKeyVault_properties_typeProperties_baseUrl')]"
 					},
+					"Salesforce1_properties_typeProperties_environmentUrl": {
+						"value": "[parameters('Salesforce1_properties_typeProperties_environmentUrl')]"
+					},
+					"Salesforce1_properties_typeProperties_username": {
+						"value": "[parameters('Salesforce1_properties_typeProperties_username')]"
+					},
 					"Profisee REST API_properties_typeProperties_url": {
 						"value": "[parameters('Profisee REST API_properties_typeProperties_url')]"
 					},
 					"ProfiseeRESTAPI_properties_typeProperties_url": {
 						"value": "[parameters('ProfiseeRESTAPI_properties_typeProperties_url')]"
-					},
-					"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName": {
-						"value": "[parameters('NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName')]"
-					},
-					"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName": {
-						"value": "[parameters('NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName')]"
-					},
-					"NewCityLimitsSalesCsv_properties_typeProperties_scope": {
-						"value": "[parameters('NewCityLimitsSalesCsv_properties_typeProperties_scope')]"
 					}
 				}
 			},
@@ -157,6 +176,15 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName": {
+						"value": "[parameters('NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName')]"
+					},
+					"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName": {
+						"value": "[parameters('NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName')]"
+					},
+					"NewCityLimitsSalesCsv_properties_typeProperties_scope": {
+						"value": "[parameters('NewCityLimitsSalesCsv_properties_typeProperties_scope')]"
 					},
 					"NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FolderName": {
 						"value": "[parameters('NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FolderName')]"

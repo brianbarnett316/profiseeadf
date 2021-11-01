@@ -15,6 +15,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ProfiseeDataLakeStorage'"
 		},
+		"Salesforce1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Salesforce1'"
+		},
+		"Salesforce1_securityToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'securityToken' of 'Salesforce1'"
+		},
 		"Profisee REST API No Auth Header_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
@@ -27,6 +35,14 @@
 			"type": "string",
 			"defaultValue": "https://ProfiseeKV.vault.azure.net/"
 		},
+		"Salesforce1_properties_typeProperties_environmentUrl": {
+			"type": "string",
+			"defaultValue": "https://login.salesforce.com"
+		},
+		"Salesforce1_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "tye3950@yahoo.com"
+		},
 		"Profisee REST API_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
@@ -34,18 +50,6 @@
 		"ProfiseeRESTAPI_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
-		},
-		"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName": {
-			"type": "string",
-			"defaultValue": "@triggerBody().FolderPath"
-		},
-		"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName": {
-			"type": "string",
-			"defaultValue": "@triggerBody().FileName"
-		},
-		"NewCityLimitsSalesCsv_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/eace1b14-b39d-4d89-b619-ef42f13617cb/resourceGroups/EUS2-PurviewResources/providers/Microsoft.Storage/storageAccounts/profiseedatalake"
 		}
 	},
 	"variables": {
@@ -106,6 +110,28 @@
 				"type": "AzureKeyVault",
 				"typeProperties": {
 					"baseUrl": "[parameters('ProfiseeKeyVault_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Salesforce1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "Salesforce",
+				"typeProperties": {
+					"environmentUrl": "[parameters('Salesforce1_properties_typeProperties_environmentUrl')]",
+					"username": "[parameters('Salesforce1_properties_typeProperties_username')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Salesforce1_password')]"
+					},
+					"securityToken": {
+						"type": "SecureString",
+						"value": "[parameters('Salesforce1_securityToken')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -280,6 +306,26 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SalesforceAccount')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Salesforce1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SalesforceObject",
+				"schema": [],
+				"typeProperties": {
+					"objectApiName": "Account"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Salesforce1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Profisee REST API')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -331,6 +377,62 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ProfiseeKeyVault')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ProfiseeREST_API_Records_Get')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Profisee records get REST API call.",
+				"linkedServiceName": {
+					"referenceName": "Profisee REST API",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"entityId": {
+						"type": "string"
+					},
+					"pageSize": {
+						"type": "int",
+						"defaultValue": 1000
+					},
+					"attributes": {
+						"type": "string",
+						"defaultValue": " "
+					},
+					"filter": {
+						"type": "string",
+						"defaultValue": " "
+					},
+					"orderBy": {
+						"type": "string",
+						"defaultValue": " "
+					},
+					"dbaFormat": {
+						"type": "int",
+						"defaultValue": 1
+					},
+					"recordCodes": {
+						"type": "string",
+						"defaultValue": " "
+					}
+				},
+				"folder": {
+					"name": "Profisee REST API"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": {
+						"value": "@concat(\n'records/',\ndataset().entityId, \n'/?pageSize=', string(dataset().pageSize),\n'&attributes=', dataset().attributes,\n'&filter=', dataset().filter,\n'&orderBy=', dataset().orderBy,\n'&recordCodes=', dataset().recordCodes,\n'&dbaFormat=', string(dataset().dbaFormat)\n)",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Profisee REST API')]"
 			]
 		},
 		{
@@ -867,183 +969,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DataLakeCsv')]",
 				"[concat(variables('factoryId'), '/datasets/Profisee_REST_API_Records_Upsert')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy Two Wheels Distinct Customer Data Flow')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Two Wheels Distinct Sales Customers",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "CopyTwoWheelsCustomerDataFlow",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"SalesData": {
-										"FolderName": {
-											"value": "@pipeline().parameters.FolderName",
-											"type": "Expression"
-										},
-										"FileName": {
-											"value": "@pipeline().parameters.FileName",
-											"type": "Expression"
-										}
-									},
-									"OutputDistinctCustomers": {
-										"ContainerName": "sales-upload-to-profisee",
-										"FolderName": "two-wheels"
-									}
-								}
-							},
-							"staging": {},
-							"integrationRuntime": {
-								"referenceName": "IntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"FolderName": {
-						"type": "string"
-					},
-					"FileName": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Two Wheels"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-10-20T17:02:38Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/CopyTwoWheelsCustomerDataFlow')]",
-				"[concat(variables('factoryId'), '/integrationRuntimes/IntegrationRuntime')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy Two Wheels Distinct Customer Data Flow_ToREST')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Two Wheels Distinct Sales Customers",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "CopyTwoWheelsCustomerDataFlow_ToREST",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"SalesData": {
-										"FolderName": {
-											"value": "@pipeline().parameters.FolderName",
-											"type": "Expression"
-										},
-										"FileName": {
-											"value": "@pipeline().parameters.FileName",
-											"type": "Expression"
-										}
-									},
-									"OutputDistinctCustomers": {
-										"entityId": "Customer"
-									}
-								}
-							},
-							"staging": {},
-							"integrationRuntime": {
-								"referenceName": "IntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"FolderName": {
-						"type": "string"
-					},
-					"FileName": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Two Wheels"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-10-20T17:02:38Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/CopyTwoWheelsCustomerDataFlow_ToREST')]",
-				"[concat(variables('factoryId'), '/integrationRuntimes/IntegrationRuntime')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/NewCityLimitsSalesCsv')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Copy City Limits Distinct Customer Data Flow",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"FolderName": "[parameters('NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName')]",
-							"FileName": "[parameters('NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName')]"
-						}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/city-limits/blobs/",
-					"blobPathEndsWith": ".csv",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('NewCityLimitsSalesCsv_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy City Limits Distinct Customer Data Flow')]"
 			]
 		}
 	]
