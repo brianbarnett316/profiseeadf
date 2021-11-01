@@ -1,0 +1,60 @@
+{
+	"name": "Copy Two Wheels Distinct Customer Data Flow_ToREST",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Two Wheels Distinct Sales Customers",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "CopyTwoWheelsCustomerDataFlow_ToREST",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"SalesData": {
+								"FolderName": {
+									"value": "@pipeline().parameters.FolderName",
+									"type": "Expression"
+								},
+								"FileName": {
+									"value": "@pipeline().parameters.FileName",
+									"type": "Expression"
+								}
+							},
+							"OutputDistinctCustomers": {
+								"entityId": "Customer"
+							}
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "IntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"parameters": {
+			"FolderName": {
+				"type": "string"
+			},
+			"FileName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Two Wheels"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-10-20T17:02:38Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
