@@ -1,0 +1,162 @@
+{
+	"name": "REST API direct to Salesforce",
+	"properties": {
+		"activities": [
+			{
+				"name": "REST API to Salesforce Accounts",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"AbsoluteUrl": "$.nextPage"
+						}
+					},
+					"sink": {
+						"type": "SalesforceSink",
+						"writeBatchSize": 5000,
+						"writeBehavior": "upsert",
+						"externalIdFieldName": "ProfiseeCode__c",
+						"ignoreNullValues": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['code']"
+								},
+								"sink": {
+									"name": "ProfiseeCode__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['name']"
+								},
+								"sink": {
+									"name": "Name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['address Line 1']"
+								},
+								"sink": {
+									"name": "ShippingStreet",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['city']"
+								},
+								"sink": {
+									"name": "ShippingCity",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['state']"
+								},
+								"sink": {
+									"name": "ShippingState",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['zip']"
+								},
+								"sink": {
+									"name": "ShippingPostalCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['phone Number']"
+								},
+								"sink": {
+									"name": "Phone",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['website']"
+								},
+								"sink": {
+									"name": "Website",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['industry']"
+								},
+								"sink": {
+									"name": "Industry",
+									"type": "String"
+								}
+							}
+						],
+						"collectionReference": "$['data']"
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ProfiseeREST_API_Records_Get",
+						"type": "DatasetReference",
+						"parameters": {
+							"entityId": {
+								"value": "@pipeline().parameters.EntityName",
+								"type": "Expression"
+							},
+							"pageSize": 100,
+							"attributes": "[Address Line 1],[City],[State],[Zip],[Phone Number],[Website],[Industry]",
+							"filter": " ",
+							"orderBy": " ",
+							"dbaFormat": 1,
+							"recordCodes": " 37b3523e-8378-47e8-8ac6-605da547a5c1"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SalesforceAccount",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"EntityName": {
+				"type": "string",
+				"defaultValue": "Customer"
+			}
+		},
+		"folder": {
+			"name": "Salesforce"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-09-25T15:29:08Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
