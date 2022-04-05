@@ -17,20 +17,14 @@
 		"Salesforce1_securityToken": {
 			"value": ""
 		},
-		"Profisee REST API No Auth Header_properties_typeProperties_url": {
-			"value": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
-		},
 		"Profisee REST API_properties_typeProperties_url": {
-			"value": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
+			"value": "https://profvm3wklyweb.profisee.biz/profisee21r3/rest/v1"
 		},
 		"ProfiseeDataLakeStorage_properties_typeProperties_url": {
 			"value": "https://profiseedatalake.dfs.core.windows.net"
 		},
 		"ProfiseeKeyVault_properties_typeProperties_baseUrl": {
 			"value": "https://ProfiseeKV.vault.azure.net/"
-		},
-		"ProfiseeRESTAPI_properties_typeProperties_url": {
-			"value": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
 		},
 		"Salesforce1_properties_typeProperties_environmentUrl": {
 			"value": "https://login.salesforce.com"

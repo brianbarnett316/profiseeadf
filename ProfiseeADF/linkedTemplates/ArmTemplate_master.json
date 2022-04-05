@@ -23,13 +23,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'securityToken' of 'Salesforce1'"
 		},
-		"Profisee REST API No Auth Header_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
-		},
 		"Profisee REST API_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
+			"defaultValue": "https://profvm3wklyweb.profisee.biz/profisee21r3/rest/v1"
 		},
 		"ProfiseeDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
@@ -38,10 +34,6 @@
 		"ProfiseeKeyVault_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://ProfiseeKV.vault.azure.net/"
-		},
-		"ProfiseeRESTAPI_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://profvmmspurview.profisee.biz/profisee/rest/v1"
 		},
 		"Salesforce1_properties_typeProperties_environmentUrl": {
 			"type": "string",
@@ -138,9 +130,6 @@
 					"Salesforce1_securityToken": {
 						"value": "[parameters('Salesforce1_securityToken')]"
 					},
-					"Profisee REST API No Auth Header_properties_typeProperties_url": {
-						"value": "[parameters('Profisee REST API No Auth Header_properties_typeProperties_url')]"
-					},
 					"ProfiseeDataLakeStorage_properties_typeProperties_url": {
 						"value": "[parameters('ProfiseeDataLakeStorage_properties_typeProperties_url')]"
 					},
@@ -156,8 +145,14 @@
 					"Profisee REST API_properties_typeProperties_url": {
 						"value": "[parameters('Profisee REST API_properties_typeProperties_url')]"
 					},
-					"ProfiseeRESTAPI_properties_typeProperties_url": {
-						"value": "[parameters('ProfiseeRESTAPI_properties_typeProperties_url')]"
+					"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName": {
+						"value": "[parameters('NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName')]"
+					},
+					"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName": {
+						"value": "[parameters('NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName')]"
+					},
+					"NewCityLimitsSalesCsv_properties_typeProperties_scope": {
+						"value": "[parameters('NewCityLimitsSalesCsv_properties_typeProperties_scope')]"
 					}
 				}
 			},
@@ -176,15 +171,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName": {
-						"value": "[parameters('NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FolderName')]"
-					},
-					"NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName": {
-						"value": "[parameters('NewCityLimitsSalesCsv_properties_Copy City Limits Distinct Customer Data Flow_parameters_FileName')]"
-					},
-					"NewCityLimitsSalesCsv_properties_typeProperties_scope": {
-						"value": "[parameters('NewCityLimitsSalesCsv_properties_typeProperties_scope')]"
 					},
 					"NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FolderName": {
 						"value": "[parameters('NewSalesUploadCityLimitsCsv_properties_Copy City Limits Customers to Profisee_parameters_FolderName')]"
